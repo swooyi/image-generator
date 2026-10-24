@@ -1,0 +1,100 @@
+{
+  "target_file": "zbll/*.json",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Convert the 472 ZBLL cases into seven OLL-family batch JSON files for the 3x3 image generator.",
+  "assumptions": [
+    "Each output item uses the source case name as filename and the source representative scramble as scramble.",
+    "The seven OLL families are T, U, L, H, Pi, Sune, and Antisune."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_confirm_source_and_schema",
+      "order": 1,
+      "title": "Confirm source cases and batch schema",
+      "check": true,
+      "targets": "C:/dev/alg-note/alg/3x3/zbll/cases.json and src/app.bundle.js",
+      "allowed_fields": [],
+      "protected_fields": ["source files"],
+      "summary": "Confirm the source grouping and the required filename/scramble batch fields.",
+      "verify": ["Confirm 472 source cases across seven OLL families.", "Confirm the generator accepts a non-empty array of filename/scramble objects."]
+    },
+    {
+      "id": "02_create_t_json",
+      "order": 2,
+      "title": "Create T batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-t.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the T-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique T cases."]
+    },
+    {
+      "id": "03_create_u_json",
+      "order": 3,
+      "title": "Create U batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-u.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the U-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique U cases."]
+    },
+    {
+      "id": "04_create_l_json",
+      "order": 4,
+      "title": "Create L batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-l.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the L-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique L cases."]
+    },
+    {
+      "id": "05_create_h_json",
+      "order": 5,
+      "title": "Create H batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-h.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the H-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 40 unique H cases."]
+    },
+    {
+      "id": "06_create_pi_json",
+      "order": 6,
+      "title": "Create Pi batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-pi.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the Pi-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique Pi cases."]
+    },
+    {
+      "id": "07_create_sune_json",
+      "order": 7,
+      "title": "Create Sune batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-sune.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the Sune-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique Sune cases."]
+    },
+    {
+      "id": "08_create_antisune_json",
+      "order": 8,
+      "title": "Create Antisune batch JSON",
+      "check": true,
+      "targets": "zbll/zbll-antisune.json",
+      "allowed_fields": ["filename", "scramble"],
+      "protected_fields": ["source case data"],
+      "summary": "Create the Antisune-family batch file.",
+      "verify": ["Parse JSON successfully.", "Confirm 72 unique Antisune cases.", "Confirm all seven files total 472 cases."]
+    }
+  ]
+}

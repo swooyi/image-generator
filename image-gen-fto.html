@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FTO Image Generator</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="./src/generator-ui.css" />
+    <link rel="stylesheet" href="./src/simulator-fto.css" />
+</head>
+  <body class="generator-ui">
+    <aside id="preset-panel" class="preset-drawer" popover="auto" aria-label="프리셋">
+<div class="preset-drawer-header"><h2>프리셋</h2><button type="button" popovertarget="preset-panel" popovertargetaction="hide" aria-label="프리셋 닫기">닫기</button></div>
+<div class="control-panel-content">
+                <div class="preset-save-row">
+                  <input id="preset-name" aria-label="프리셋 이름" type="text" maxlength="40" placeholder="프리셋 이름" />
+                  <button id="new-preset" type="button">새 프리셋</button>
+                  <button id="save-preset" class="button-primary" type="button">저장</button>
+                </div>
+                <div id="preset-list" class="preset-list" role="list" aria-label="저장된 프리셋">
+                  <p class="preset-empty">저장된 프리셋 없음</p>
+                </div>
+                
+              </div>
+            
+</aside>
+<main class="app">
+      <header class="app-header">
+
+        <a class="home-link" href="./index.html" aria-label="이미지 생성기 선택으로 돌아가기">← 생성기 선택</a>
+        <h1>FTO · 이미지 &amp; 시뮬레이터</h1>
+        
+        <div class="history-controls" aria-label="편집 기록">
+          <button id="undo" type="button" disabled title="실행취소 (Ctrl+Z)">실행취소</button>
+          <button id="redo" type="button" disabled title="재실행 (Ctrl+Y 또는 Ctrl+Shift+Z)">재실행</button>
+        </div>
+      <section class="shared-notation" aria-label="공통 회전 입력">
+<label class="field">
+                    <span>입력 모드</span>
+                    <select id="input-mode">
+                      <option value="setup">Setup · 그대로 회전</option>
+                      <option value="alg">Alg · 역회전으로 케이스 생성</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span>회전기호</span>
+                    <textarea id="notation" spellcheck="false" placeholder="여기에 공식을 입력해주세요." aria-describedby="notation-error"></textarea>
+                  </label>
+                  
+                  <p id="notation-error" class="error" role="alert" hidden></p>
+                  <button id="clear-notation" type="button">회전 입력 지우기</button>
+                  <div id="notation-viewpoints" role="group" aria-label="시점 기호 입력"></div>
+</section>
+<div class="header-navigation">
+<button class="preset-toggle" type="button" popovertarget="preset-panel" aria-controls="preset-panel">프리셋</button>
+<nav class="fto-tabs" role="tablist" aria-label="FTO 작업 선택">
+        <button id="fto-tab-single" type="button" role="tab" aria-selected="true" aria-controls="single-workspace" data-fto-tab="single">한 개 생성</button>
+        <button id="fto-tab-batch" type="button" role="tab" aria-selected="false" aria-controls="batch-workspace" data-fto-tab="batch" tabindex="-1">여러 개 생성</button>
+        <button id="fto-tab-simulator" type="button" role="tab" aria-selected="false" aria-controls="simulator-workspace" data-fto-tab="simulator" tabindex="-1">시뮬레이터</button>
+      </nav>
+</div>
+
+</header>
+
+      
+      <div class="lower-layout">
+        <aside class="control-column" aria-label="설정">
+          
+
+          <section class="custom-area" aria-label="커스텀 설정">
+            <details class="control-panel custom-panel" open>
+              <summary>커스텀 설정</summary>
+              <div class="control-panel-content custom-panel-content">
+                
+
+                <div class="custom-column color-settings">
+                  <div class="field">
+                    <span>선택 색상</span>
+                    <div id="palette" class="palette"></div>
+                  </div>
+                  <div class="palette-editor" aria-label="선택 색상 수정">
+                    <div class="palette-editor-row">
+                      <label class="palette-color-picker">색상<input id="palette-color" type="color" value="#ffffff" /></label>
+                      <label class="palette-hex">HEX<input id="palette-hex" type="text" value="#ffffff" maxlength="7" spellcheck="false" /></label>
+                    </div>
+                    <div class="palette-rgb">
+                      <label>R<input id="palette-r" type="number" min="0" max="255" value="255" /></label>
+                      <label>G<input id="palette-g" type="number" min="0" max="255" value="255" /></label>
+                      <label>B<input id="palette-b" type="number" min="0" max="255" value="255" /></label>
+                    </div>
+                    <div class="button-row">
+                      <button id="palette-apply" class="button-primary" type="button">선택 색상에 적용</button>
+                      <button id="palette-reset" type="button">기본 팔레트 복원</button>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span>원래 색상 면 전체 칠하기</span>
+                    <div id="face-buttons" class="face-buttons"></div>
+                  </div>
+                  <div class="button-row">
+                    <button id="reset-solved" type="button">기본 색상 복원</button>
+                    <button id="reset-blank" type="button">전체 Blank</button>
+                  </div>
+                  <div id="color-layout-controls" class="viewpoint-controls color-layout-controls" aria-label="색 배치 변환"></div>
+                  
+                  
+                </div>
+
+              <div class="sticker-text-controls" aria-label="스티커 문자 설정">
+              <label class="toggle view-option-toggle">
+                <input id="show-labels" type="checkbox" />
+                <span>스티커 ID 표시</span>
+              </label>
+                    <label class="field"><span>문자를 넣을 스티커</span><select id="sticker-text-target"></select></label>
+                    <label class="field"><span>스티커 문자</span><input id="sticker-text-input" type="text" maxlength="20" placeholder="문자 입력 (비우면 삭제)" /></label>
+                    <label class="toggle"><input id="show-sticker-text" type="checkbox" checked /><span>이미지에 스티커 문자 표시</span></label>
+                    
+                  </div>
+              </div>
+            <div class="display-settings"><label class="toggle view-option-toggle">
+                <input id="show-back-faces" type="checkbox" checked />
+                <span>뒷면 표시</span>
+              </label></div></details>
+          </section>
+
+          <p id="status" class="sr-only" role="status" aria-live="polite">불러오는 중…</p>
+        <details id="save-settings" class="control-panel save-panel" open><summary>저장 설정</summary><div class="panel-body"><div class="header-save-settings" aria-label="저장 설정">
+          <label class="field header-save-filename" for="save-filename">
+            <span>저장 파일명</span>
+            <input id="save-filename" type="text" maxlength="80" value="fto" placeholder="파일명 접두사" />
+          </label>
+          <div class="header-save-directory">
+            <span>저장 위치</span>
+            <div class="header-save-directory-row">
+              <button id="select-save-directory" type="button">저장 위치 선택</button>
+              <p id="save-directory-name" class="save-directory-name">브라우저 기본 다운로드 폴더</p>
+            </div>
+          </div>
+          
+        </div><div id="batch-save-controls" class="batch-save-controls" hidden>
+              <div class="batch-file-row">
+                <label class="file-button" for="batch-json-file">JSON 파일 불러오기</label>
+                <input id="batch-json-file" type="file" accept=".json,application/json" />
+              </div>
+              <label class="field">
+                <span>JSON 입력</span>
+                <textarea id="batch-json" class="batch-json" spellcheck="false" placeholder='[{"filename":"case-01","scramble":"U R U&#39; R&#39;"}]' aria-describedby="batch-status"></textarea>
+              </label>
+              
+              
+              <div class="batch-action-row">
+                <label class="field batch-format-field" for="batch-format">
+                  <span>저장 형식</span>
+                  <select id="batch-format">
+                    <option value="png">PNG</option>
+                    <option value="svg">SVG</option>
+                  </select>
+                </label>
+                <button class="button-action" id="preview-batch" type="button">여러 이미지 미리보기</button>
+                <button id="save-batch" class="button-primary" type="button" disabled>선택 항목 저장</button>
+                <button id="stop-batch" type="button" disabled>생성 중단</button>
+              </div>
+              
+              <p id="batch-status" class="batch-status" role="status" aria-live="polite">JSON을 입력하거나 파일을 불러오세요.</p>
+            </div></div></details></aside>
+
+        <div class="fto-workspaces">
+
+        <section role="tabpanel" aria-labelledby="fto-tab-single" id="single-workspace" class="workspace" aria-label="FTO previews" data-view-mode="both">
+            <div id="single-view-mode" class="view-toolbar view-mode-controls" role="group" aria-label="단일 이미지 보기 방식">
+              <span>보기 설정</span>
+              
+
+              
+              <button type="button" data-view-mode="cif" aria-pressed="false">CIF 보기</button>
+              <button type="button" data-view-mode="eif" aria-pressed="false">EIF 보기</button>
+              <button type="button" data-view-mode="both" aria-pressed="true">둘 다 보기</button>
+            </div>
+            <div class="preview-panel" data-view="cif">
+              <div class="panel-header">
+                <h2>CIF</h2>
+                <button id="download-cif-svg" type="button">SVG</button>
+                <button id="download-cif-png" class="button-primary" type="button">PNG</button>
+              </div>
+              <div id="cif-viewpoint-controls" class="viewpoint-controls" aria-label="CIF 시점 변환"></div>
+              <div id="cif-preview" class="preview"></div>
+            </div>
+            <div class="preview-panel" data-view="eif">
+              <div class="panel-header">
+                <h2>EIF</h2>
+                <button id="download-eif-svg" type="button">SVG</button>
+                <button id="download-eif-png" class="button-primary" type="button">PNG</button>
+              </div>
+              <div id="eif-viewpoint-controls" class="viewpoint-controls" aria-label="EIF 시점 변환"></div>
+              <div id="eif-preview" class="preview"></div>
+            </div>
+        </section>
+
+      <section id="batch-workspace" role="tabpanel" aria-labelledby="fto-tab-batch" hidden class="batch-area" aria-label="여러 ALG 이미지 생성"><div id="batch-view-mode" class="view-toolbar view-mode-controls" role="group" aria-label="여러 이미지 보기 방식">
+                <span>보기 설정</span>
+                <button type="button" data-view-mode="cif" aria-pressed="false">CIF 보기</button>
+                <button type="button" data-view-mode="eif" aria-pressed="false">EIF 보기</button>
+                <button type="button" data-view-mode="both" aria-pressed="true">둘 다 보기</button>
+              </div><div id="batch-preview-list" class="batch-preview-list" aria-label="여러 이미지 미리보기" data-view-mode="both"></div></section>
+  <section id="simulator-workspace" class="sim-panel" role="tabpanel" aria-labelledby="fto-tab-simulator" hidden aria-label="FTO 3D 시뮬레이터">
+    <h2>FTO 3D · 퍼즐 동작 시뮬레이터</h2>
+    
+    <canvas id="sim-canvas" aria-label="회전 가능한 FTO 3D 퍼즐">3D 퍼즐 표시에는 Canvas를 지원하는 브라우저가 필요합니다.</canvas>
+    <div class="sim-toolbar">
+      <button id="sim-start" type="button">처음</button><button id="sim-prev" type="button">이전 수</button>
+      <button id="sim-play" type="button">자동 재생</button><button id="sim-next" type="button">다음 수</button><button id="sim-end" type="button">마지막</button>
+      <span id="sim-progress" role="status" aria-live="polite"></span>
+    </div>
+    <div class="sim-toolbar">
+      <label>회전 / 점 하나 시간(ms) <input id="sim-speed" type="number" min="50" max="1000" step="10" value="600" /></label>
+      <input id="sim-speed-range" type="range" min="50" max="1000" step="10" value="600" aria-label="회전 및 점 하나 대기시간 조절" />
+      <button id="sim-camera" type="button">3D 시점 초기화</button>
+      <label><input id="sim-paint" type="checkbox" /> 클릭으로 스티커 칠하기</label>
+    </div>
+    
+    
+    <div id="sim-viewpoints" class="sim-toolbar" aria-label="CIF 시점 변환"></div>
+    <details><summary>면 회전 · 일반 / wide / slice</summary><div id="sim-moves"></div></details>
+  </section>
+        </div>
+      </div>
+    </main>
+    <div id="save-toast" class="save-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <script defer src="./src/app.bundle.js"></script>
+  </body>
+</html>

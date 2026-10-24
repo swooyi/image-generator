@@ -1,0 +1,58 @@
+{
+  "target_file": "FTO Image Generator preset edit workflow",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Make preset buttons more visually distinct and expose a clear workflow for updating a loaded preset or starting a new one.",
+  "assumptions": [
+    "Loading a preset enters edit mode for that preset.",
+    "Saving with the loaded preset name updates it in place.",
+    "Changing the name saves a separate preset.",
+    "The existing localStorage schema remains unchanged."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_add_edit_state",
+      "order": 1,
+      "title": "Track loaded preset edit state",
+      "check": true,
+      "targets": "index.html, src/app.js",
+      "allowed_fields": ["active preset state", "save button label", "new preset action", "load, save, and delete flow"],
+      "protected_fields": ["preset storage schema", "image configuration fields"],
+      "summary": "Show update mode after loading and let users clear it to create a new preset.",
+      "verify": ["Loaded preset uses the Change Save label.", "New Preset clears the active selection.", "Changing the name saves separately."]
+    },
+    {
+      "id": "02_strengthen_preset_cards",
+      "order": 2,
+      "title": "Make clickable preset cards visually distinct",
+      "check": true,
+      "targets": "src/app.js, src/styles.css",
+      "allowed_fields": ["preset button content", "card styles", "selected state", "delete control styles"],
+      "protected_fields": ["other control layouts", "preview styles"],
+      "summary": "Display preset names and action states in a card-like load button with a clear selected style.",
+      "verify": ["Each item shows an action label.", "The active item is visually distinct."]
+    },
+    {
+      "id": "03_rebuild_bundle",
+      "order": 3,
+      "title": "Regenerate standalone browser bundle",
+      "check": true,
+      "targets": "src/app.bundle.js",
+      "allowed_fields": ["generated bundle"],
+      "protected_fields": ["source assets"],
+      "summary": "Build the browser bundle with the edit workflow.",
+      "verify": ["npm run build succeeds."]
+    },
+    {
+      "id": "04_verify",
+      "order": 4,
+      "title": "Run preset workflow and regression checks",
+      "check": true,
+      "targets": "test/static-file.test.js and project tests",
+      "allowed_fields": ["preset edit UI assertions"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Verify hooks and run the full test suite.",
+      "verify": ["npm test passes.", "Checklist completion count is consistent."]
+    }
+  ]
+}

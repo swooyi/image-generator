@@ -1,0 +1,72 @@
+{
+  "target_file": "FTO Image Generator web UI",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Correct the mistaken face-turn controls, split settings into collapsible custom and preset panels, and add the intended viewpoint transformation after its orientation contract is established.",
+  "assumptions": [
+    "The algorithm notation textarea remains because it changes the puzzle state.",
+    "The previously added face-turn shortcut buttons are removed because they do not represent viewpoint changes.",
+    "Native details elements provide accessible collapse and expand behavior.",
+    "{Uo}, {Ro}, and {Fo} rotate the whole puzzle 120 degrees clockwise when viewed from outside the named face; prime tokens rotate in the opposite direction.",
+    "CIF and EIF retain independent viewpoint token sequences."
+  ],
+  "source_checklists": [
+    "docs/archive/[01] [05_of_05] task-checklist-layout-presets-rotation.json"
+  ],
+  "tasks": [
+    {
+      "id": "01_remove_wrong_turn_buttons",
+      "order": 1,
+      "title": "Remove the mistaken face-turn shortcut controls",
+      "check": true,
+      "targets": "index.html, src/app.js, src/styles.css, test/static-file.test.js",
+      "allowed_fields": ["face-turn shortcut UI and its direct event code", "related static assertions"],
+      "protected_fields": ["algorithm parser", "physical move permutations", "notation textarea"],
+      "summary": "Remove the controls that interpreted the request as physical face turns.",
+      "verify": ["No rotation-buttons hook remains.", "Notation input and engine behavior remain available."]
+    },
+    {
+      "id": "02_split_collapsible_panels",
+      "order": 2,
+      "title": "Split controls into collapsible custom and preset panels",
+      "check": true,
+      "targets": "index.html, src/styles.css",
+      "allowed_fields": ["control panel structure", "details and summary styles", "responsive layout"],
+      "protected_fields": ["preview SVG geometry", "preset data format"],
+      "summary": "Create separate custom and preset details panels that can be expanded and collapsed.",
+      "verify": ["Both panels use details and summary.", "Existing control IDs remain connected."]
+    },
+    {
+      "id": "03_add_viewpoint_transformation",
+      "order": 3,
+      "title": "Add whole-puzzle viewpoint transformation",
+      "check": true,
+      "targets": "viewpoint controls, engine mapping, preview state, presets",
+      "allowed_fields": ["view orientation state", "whole-puzzle rotation mapping", "viewpoint UI", "preset view state"],
+      "protected_fields": ["physical face-turn semantics", "template path geometry"],
+      "summary": "Add independent CIF and EIF controls for {Uo}, {Uo'}, {Ro}, {Ro'}, {Fo}, and {Fo'} whole-puzzle viewpoint rotations.",
+      "verify": ["Viewpoint changes do not alter the underlying puzzle case.", "Clicking the intended control immediately updates the rendered image."]
+    },
+    {
+      "id": "04_rebuild_bundle",
+      "order": 4,
+      "title": "Regenerate the standalone browser bundle",
+      "check": true,
+      "targets": "src/app.bundle.js",
+      "allowed_fields": ["generated bundle"],
+      "protected_fields": ["source assets"],
+      "summary": "Build the static bundle from the corrected source.",
+      "verify": ["npm run build succeeds."]
+    },
+    {
+      "id": "05_verify",
+      "order": 5,
+      "title": "Run focused automated verification",
+      "check": true,
+      "targets": "project tests and checklist",
+      "allowed_fields": ["tests related to corrected controls and panels"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Validate panel structure, bundle output, and engine regressions.",
+      "verify": ["npm test passes.", "Checklist filename matches completion state."]
+    }
+  ]
+}

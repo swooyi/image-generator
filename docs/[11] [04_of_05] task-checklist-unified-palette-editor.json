@@ -1,0 +1,71 @@
+{
+  "target_file": "C:\\dev\\FTO Image generator",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Unify palette customization between the FTO and 3x3 generators while keeping eight FTO face colors and exposing Blank as a separate editable palette item in both generators.",
+  "assumptions": [
+    "FTO keeps exactly eight face colors; Blank is a separate ninth utility swatch.",
+    "3x3 keeps six face colors and adds Blank as a separate seventh editable swatch.",
+    "Both generators use the same native color, HEX, RGB, apply, and default-reset interaction pattern."
+  ],
+  "source_checklists": [
+    "docs/[10] [03_of_04] task-checklist-3x3-palette-editor.json (unfinished visual verification merged into task 05)"
+  ],
+  "tasks": [
+    {
+      "id": "01_unify_palette_ui",
+      "order": 1,
+      "title": "Unify palette editor controls",
+      "check": true,
+      "targets": "image-gen-fto.html, image-gen-3x3.html, src/styles.css, and src/cube-3x3.css",
+      "allowed_fields": ["palette editor markup", "palette editor labels", "palette editor styling"],
+      "protected_fields": ["preview geometry", "batch JSON schema"],
+      "summary": "Give both generators the same labeled color, HEX, RGB, apply, and reset controls.",
+      "verify": ["Confirmed matching stable control IDs on both pages.", "Confirmed FTO data has eight face colors plus a separate Blank swatch.", "Confirmed 3x3 state has six face colors plus a separate Blank swatch."]
+    },
+    {
+      "id": "02_implement_fto_palette_state",
+      "order": 2,
+      "title": "Implement editable FTO palette behavior",
+      "check": true,
+      "targets": "src/app.js",
+      "allowed_fields": ["palette state", "color conversion helpers", "palette event handlers", "history and preset palette persistence"],
+      "protected_fields": ["move engine", "SVG geometry", "batch schema"],
+      "summary": "Match the existing 3x3 palette editing behavior while preserving eight FTO face colors and separate Blank handling.",
+      "verify": ["HEX and RGB validation is shared in behavior with 3x3.", "Face and Blank edits recolor matching stickers and color-layout origins.", "History and presets capture the palette; solved and Blank resets use current colors."]
+    },
+    {
+      "id": "03_confirm_3x3_blank",
+      "order": 3,
+      "title": "Confirm editable 3x3 Blank swatch",
+      "check": true,
+      "targets": "src/cube-3x3.js",
+      "allowed_fields": ["3x3 palette rendering and Blank behavior"],
+      "protected_fields": ["cube move engine", "preview geometry"],
+      "summary": "Ensure Blank is a visible seventh palette item and participates in editing, reset, history, and presets.",
+      "verify": ["Automated interaction coverage confirms U, R, F, D, L, B, and Blank.", "전체 Blank already uses the customized state.palette.Blank value."]
+    },
+    {
+      "id": "04_add_tests_and_build",
+      "order": 4,
+      "title": "Add regression coverage and rebuild",
+      "check": true,
+      "targets": "test/static-file.test.js, test/ui-interactions.test.js, src/app.bundle.js, and src/cube-3x3.bundle.js",
+      "allowed_fields": ["palette editor tests", "generated bundles"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Cover both palette editors, rebuild, and run the complete test suite.",
+      "verify": ["npm test passed: 69 tests, 0 failures.", "Generated bundles remain import-free and fetch-free under static tests."]
+    },
+    {
+      "id": "05_verify_generator_ui",
+      "order": 5,
+      "title": "Verify both generator UIs",
+      "check": false,
+      "targets": "FTO and 3x3 generator desktop and narrow layouts",
+      "allowed_fields": ["visual fixes required by palette editors"],
+      "protected_fields": ["unrelated layouts", "template geometry"],
+      "summary": "Visually confirm both editors, previews, and existing controls remain usable.",
+      "note": "Automated structure and interaction checks pass. Live visual verification remains pending because the isolated in-app browser could not reach the host-local server in the prior verification attempt and no usable external browser surface was available.",
+      "verify": ["Check both pages at desktop width.", "Check both palette editors at narrow width.", "Confirm palette edits visibly recolor each puzzle."]
+    }
+  ]
+}

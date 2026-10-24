@@ -1,0 +1,8 @@
+node_modules/
+.agents/
+.codex/
+.src/
+output/
+*.code-workspace
+.env
+.env.*

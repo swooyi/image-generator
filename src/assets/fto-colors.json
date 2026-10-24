@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "faces": {
+    "U": "#ffffff",
+    "R": "#ff0d00",
+    "F": "#67e000",
+    "L": "#643d94",
+    "B": "#1265ff",
+    "BR": "#898888",
+    "D": "#fff100",
+    "BL": "#ff981c"
+  },
+  "blank": "#2c2d2d",
+  "line": "#211f20",
+  "palette": [
+    {
+      "name": "U white",
+      "face": "U",
+      "color": "#ffffff"
+    },
+    {
+      "name": "R red",
+      "face": "R",
+      "color": "#ff0d00"
+    },
+    {
+      "name": "F green",
+      "face": "F",
+      "color": "#67e000"
+    },
+    {
+      "name": "L purple",
+      "face": "L",
+      "color": "#643d94"
+    },
+    {
+      "name": "B blue",
+      "face": "B",
+      "color": "#1265ff"
+    },
+    {
+      "name": "BR gray",
+      "face": "BR",
+      "color": "#898888"
+    },
+    {
+      "name": "D yellow",
+      "face": "D",
+      "color": "#fff100"
+    },
+    {
+      "name": "BL orange",
+      "face": "BL",
+      "color": "#ff981c"
+    },
+    {
+      "name": "Blank dark",
+      "face": null,
+      "color": "#2c2d2d"
+    }
+  ]
+}

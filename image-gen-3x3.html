@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>NxNxN Image Generator</title><link rel="stylesheet" href="./src/cube-3x3.css" /><link rel="stylesheet" href="./src/generator-ui.css" />
+<link rel="stylesheet" href="./src/simulator-fto.css" /></head>
+<body class="generator-ui"><aside id="preset-panel" class="preset-drawer" popover="auto" aria-label="프리셋">
+<div class="preset-drawer-header"><h2>프리셋</h2><button type="button" popovertarget="preset-panel" popovertargetaction="hide" aria-label="프리셋 닫기">닫기</button></div>
+<div class="panel-body">
+<div class="preset-save-row"><input aria-label="프리셋 이름" id="preset-name" type="text" maxlength="40" placeholder="프리셋 이름" /><button id="new-preset">새 프리셋</button><button id="save-preset" class="button-primary">저장</button></div><div id="preset-list" class="preset-list" role="list" aria-label="저장된 프리셋"></div>
+</div>
+</aside>
+<main class="cube-app">
+<header class="cube-header">
+
+<a class="home-link" href="./index.html">← 생성기 선택</a><h1>NxNxN Image Generator</h1>
+
+<div class="history-controls"><button id="undo" disabled title="실행취소 (Ctrl+Z)">실행취소</button><button id="redo" disabled title="재실행 (Ctrl+Y 또는 Ctrl+Shift+Z)">재실행</button></div>
+<section class="shared-notation" aria-label="공통 회전 입력">
+<div class="cube-input-options"><label>크기<select id="cube-size"><option value="2">2×2×2</option><option value="3" selected>3×3×3</option><option value="4">4×4×4</option><option value="5">5×5×5</option><option value="6">6×6×6</option><option value="7">7×7×7</option></select></label><label>입력 모드<select id="input-mode"><option value="setup">Setup · 그대로 회전</option><option value="alg">Alg · 역회전으로 케이스 생성</option></select></label></div>
+<label>회전기호<textarea id="notation" rows="4" spellcheck="false" placeholder="여기에 공식을 입력해주세요." aria-describedby="notation-error"></textarea></label>
+
+<p id="notation-error" class="error" role="alert" hidden></p><button id="clear-notation">회전 입력 지우기</button>
+<div id="notation-viewpoints" role="group" aria-label="시점 기호 입력"></div>
+</section>
+<div class="header-navigation">
+<button class="preset-toggle" type="button" popovertarget="preset-panel" aria-controls="preset-panel">프리셋</button>
+<nav class="fto-tabs" role="tablist" aria-label="NxNxN 작업 선택"><button id="cube-tab-single" type="button" role="tab" aria-selected="true" aria-controls="cube-single-workspace" tabindex="0">한 개 생성</button><button id="cube-tab-batch" type="button" role="tab" aria-selected="false" aria-controls="cube-batch-workspace" tabindex="-1">여러 개 생성</button><button id="cube-tab-simulator" type="button" role="tab" aria-selected="false" aria-controls="cube-simulator-workspace" tabindex="-1">시뮬레이터</button></nav>
+</div>
+
+</header>
+<div class="cube-layout"><aside class="cube-controls">
+
+<details open><summary>커스텀 설정</summary><div class="panel-body color-settings">
+
+<div><span class="control-label">선택 색상</span><div id="cube-palette" class="cube-palette" aria-label="색상 팔레트"></div></div>
+<div class="palette-editor" aria-label="선택 색상 수정">
+<div class="palette-editor-row"><label class="palette-color-picker">색상<input id="palette-color" type="color" value="#ffffff" /></label><label class="palette-hex">HEX<input id="palette-hex" type="text" value="#ffffff" maxlength="7" spellcheck="false" /></label></div>
+<div class="palette-rgb"><label>R<input id="palette-r" type="number" min="0" max="255" value="255" /></label><label>G<input id="palette-g" type="number" min="0" max="255" value="255" /></label><label>B<input id="palette-b" type="number" min="0" max="255" value="255" /></label></div>
+<div class="button-row"><button id="palette-apply" class="button-primary">선택 색상에 적용</button><button id="palette-reset">기본 팔레트 복원</button></div>
+</div>
+<div><span class="control-label">원래 색상 면 전체 칠하기</span><div id="face-paint" class="button-row"></div></div>
+<div class="button-row"><button id="cube-reset">기본 색상 복원</button><button id="cube-blank">전체 Blank</button></div>
+<div id="color-layout" class="viewpoint-controls color-layout-controls" aria-label="색 배치 변환"></div>
+
+</div><div class="display-settings"><label class="toggle view-option-toggle"><input id="show-back-faces" type="checkbox" checked /> 뒷면 표시</label><label class="toggle view-option-toggle"><input id="show-labels" type="checkbox" /> 스티커 ID 표시</label></div></details><details id="save-settings" class="control-panel save-panel" open><summary>저장 설정</summary><div class="panel-body"><div class="header-save-settings">
+<label class="header-save-filename">저장 파일명<input id="save-filename" type="text" maxlength="80" value="nxnxn" placeholder="파일명 접두사" /></label>
+<div class="header-save-directory"><span>저장 위치</span><div class="header-save-directory-row"><button id="save-directory">저장 위치 선택</button><p id="directory-name" class="save-directory-name">브라우저 기본 다운로드 폴더</p></div></div>
+</div><div id="batch-save-controls" class="batch-save-controls" hidden>
+<label class="file-button" for="batch-file">JSON 파일 불러오기</label><input class="sr-only" id="batch-file" type="file" accept=".json,application/json" />
+<label>JSON 입력<textarea id="batch-json" rows="8" spellcheck="false" placeholder='[{"filename":"case-01","scramble":"R U R\u0027 U\u0027"}]'></textarea></label>
+
+<label>저장 형식<select id="batch-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
+
+<div class="button-row"><button class="button-action" id="preview-batch">여러 이미지 미리보기</button><button id="save-batch" class="button-primary" disabled>선택 항목 저장</button><button id="stop-batch" disabled>생성 중단</button></div><p id="batch-status" role="status" aria-live="polite">JSON을 입력하거나 파일을 불러오세요.</p>
+</div></div></details></aside>
+<div class="cube-workspaces"><section id="cube-single-workspace" class="workspace" role="tabpanel" aria-labelledby="cube-tab-single" aria-label="NxNxN 미리보기">
+<div id="single-view" class="view-toolbar view-mode-controls" role="group" aria-label="단일 이미지 보기 방식"><span>보기 설정</span><button type="button" data-view-mode="3d" aria-pressed="false">3D 보기</button><button type="button" data-view-mode="ll" aria-pressed="false">LL 보기</button><button type="button" data-view-mode="both" aria-pressed="true">둘 다 보기</button></div>
+<div class="cube-previews">
+<article class="cube-preview-card" data-view="3d"><header><h2>3D</h2><button data-download="3d" data-format="svg">SVG</button><button data-download="3d" data-format="png" class="button-primary">PNG</button></header><div id="viewpoint-3d" class="viewpoint-controls" aria-label="3D 시점 변환"></div><div id="cube-3d-preview" class="cube-preview"></div></article>
+<article class="cube-preview-card" data-view="ll"><header><h2>LL</h2><button data-download="ll" data-format="svg">SVG</button><button data-download="ll" data-format="png" class="button-primary">PNG</button></header><div id="viewpoint-ll" class="viewpoint-controls" aria-label="LL 시점 변환"></div><div id="cube-ll-preview" class="cube-preview"></div></article>
+</div></section>
+<p id="cube-status" class="sr-only" role="status" aria-live="polite">색상을 선택한 뒤 스티커를 클릭하세요.</p>
+<section id="cube-batch-workspace" role="tabpanel" aria-labelledby="cube-tab-batch" hidden><div id="batch-view" class="view-toolbar view-mode-controls" role="group" aria-label="여러 이미지 보기 방식"><span>보기 설정</span><button type="button" data-view-mode="3d" aria-pressed="false">3D 보기</button><button type="button" data-view-mode="ll" aria-pressed="false">LL 보기</button><button type="button" data-view-mode="both" aria-pressed="true">둘 다 보기</button></div><div id="batch-list"></div></section>
+<section id="cube-simulator-workspace" class="sim-panel" role="tabpanel" aria-labelledby="cube-tab-simulator" hidden>
+<h2 id="cube-sim-title">3×3×3 시뮬레이터</h2>
+<div class="sim-toolbar"><button id="cube-sim-start" type="button">처음</button><button id="cube-sim-prev" type="button">이전 수</button><button id="cube-sim-play" type="button">자동 재생</button><button id="cube-sim-next" type="button">다음 수</button><button id="cube-sim-end" type="button">마지막</button><span id="cube-sim-progress" role="status" aria-live="polite"></span></div>
+<div class="sim-toolbar"><label>회전 / 점 하나 시간(ms)<input id="cube-sim-speed" type="number" min="50" max="1000" step="10" value="600" /></label><input id="cube-sim-speed-range" type="range" min="50" max="1000" step="10" value="600" aria-label="회전 및 점 하나 대기시간 조절" /><button id="cube-sim-camera" type="button">3D 시점 초기화</button></div>
+<div id="cube-sim-viewpoints" class="sim-toolbar" aria-label="관찰 시점 변환"></div>
+<canvas id="cube-sim-canvas" aria-label="회전 가능한 NxNxN 퍼즐"></canvas>
+</section></div></div></main><div id="save-toast" class="save-toast" role="status" aria-live="polite" hidden></div><script defer src="./src/cube-3x3.bundle.js"></script></body></html>

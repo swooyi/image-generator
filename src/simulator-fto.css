@@ -1,0 +1,19 @@
+.sim-panel { margin-bottom: 20px; padding: 18px; border: 1px solid #d4dae4; border-radius: 14px; background: #fff; }
+.sim-panel h2 { margin: 0 0 12px; }
+#sim-canvas { display: block; width: 100%; height: clamp(240px, 40vh, 400px); background: radial-gradient(ellipse, #f9fafc, #e5eaf2); border-radius: 10px; touch-action: none; cursor: grab; }
+#sim-canvas:active { cursor: grabbing; }
+#cube-sim-canvas { display: block; width: 100%; height: clamp(220px, 36vh, 380px); background: radial-gradient(ellipse, #f9fafc, #e5eaf2); border-radius: 10px; touch-action: none; cursor: grab; }
+#cube-sim-canvas:active { cursor: grabbing; }
+.sim-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+.generator-ui .sim-toolbar input[type="number"] { width: 100px; }
+.generator-ui .sim-toolbar input[type="range"] { width: 150px; padding: 0; }
+#sim-moves { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+#sim-moves button { padding: 8px 3px; }
+.fto-workspaces { min-width: 0; }
+.generator-ui .fto-workspaces .workspace { width: 100%; position: static; }
+.fto-tabs { display: flex; gap: 8px; margin: 0 0 16px; flex-wrap: wrap; }
+.fto-tabs [aria-selected="true"] { background: #253d68; color: white; border-color: #253d68; }
+.fto-tabs button:focus-visible { outline: 3px solid #689ce6; outline-offset: 2px; }
+.generator-ui .fto-workspaces .batch-panel-content { grid-template-columns: 1fr; }
+.fto-workspaces .batch-area { margin-top: 0; }
+@media(max-width:600px) { #sim-moves { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

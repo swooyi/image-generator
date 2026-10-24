@@ -1,0 +1,46 @@
+{
+  "target_file": "FTO Image Generator control layout",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Place the custom and preset panels side by side on desktop and reduce the space used by color controls.",
+  "assumptions": [
+    "The custom panel is wider than the preset panel.",
+    "The panels stack vertically on narrow screens.",
+    "All nine palette colors remain visible in one row when the desktop two-column control layout is active."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_side_by_side_panels",
+      "order": 1,
+      "title": "Arrange custom and preset panels side by side",
+      "check": true,
+      "targets": "src/styles.css",
+      "allowed_fields": ["app grid", "controls grid", "responsive breakpoints"],
+      "protected_fields": ["control content", "preview rendering"],
+      "summary": "Use two columns for control panels on desktop and stack them on narrow screens.",
+      "verify": ["Heading and status span both control columns.", "Narrow layout uses one control column."]
+    },
+    {
+      "id": "02_compact_color_controls",
+      "order": 2,
+      "title": "Compact palette and face fill controls",
+      "check": true,
+      "targets": "src/styles.css",
+      "allowed_fields": ["palette columns", "face button columns", "gaps", "button height"],
+      "protected_fields": ["color values", "button behavior"],
+      "summary": "Display palette swatches in one row and face buttons in two rows.",
+      "verify": ["Palette uses nine columns.", "Face buttons use four columns."]
+    },
+    {
+      "id": "03_verify",
+      "order": 3,
+      "title": "Run layout and regression checks",
+      "check": true,
+      "targets": "test/static-file.test.js and project tests",
+      "allowed_fields": ["layout assertions"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Verify required CSS rules and run the full test suite.",
+      "verify": ["npm test passes.", "Checklist completion count is consistent."]
+    }
+  ]
+}

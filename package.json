@@ -1,0 +1,12 @@
+{
+  "name": "fto-image-generator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-static.js",
+    "prestart": "npm run build",
+    "start": "node scripts/serve.js",
+    "pretest": "npm run build",
+    "test": "node --test"
+  }
+}

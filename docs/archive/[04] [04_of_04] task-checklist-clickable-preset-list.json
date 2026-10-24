@@ -1,0 +1,57 @@
+{
+  "target_file": "FTO Image Generator preset panel",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Replace the preset select menu with a directly clickable list and distinguish input, select, primary, regular, and destructive controls visually.",
+  "assumptions": [
+    "Clicking a preset name immediately loads it.",
+    "Each preset row has its own delete button.",
+    "The localStorage preset schema remains unchanged."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_replace_preset_select",
+      "order": 1,
+      "title": "Replace preset select with a clickable list",
+      "check": true,
+      "targets": "index.html, src/app.js",
+      "allowed_fields": ["preset list markup", "preset rendering", "load and delete event wiring"],
+      "protected_fields": ["preset storage schema", "saved image settings"],
+      "summary": "Render each saved preset as a load button with an adjacent delete action.",
+      "verify": ["No preset select or separate load button remains.", "Preset name buttons load immediately."]
+    },
+    {
+      "id": "02_distinguish_control_styles",
+      "order": 2,
+      "title": "Visually distinguish control types",
+      "check": true,
+      "targets": "index.html, src/styles.css",
+      "allowed_fields": ["control classes", "input styles", "select styles", "button variants", "preset list styles"],
+      "protected_fields": ["layout breakpoints", "preview SVG styles"],
+      "summary": "Give text inputs, select controls, regular buttons, primary actions, and delete actions distinct styling.",
+      "verify": ["Save uses primary styling.", "Delete uses destructive styling.", "Text and select controls have visibly different backgrounds."]
+    },
+    {
+      "id": "03_rebuild_bundle",
+      "order": 3,
+      "title": "Regenerate static browser bundle",
+      "check": true,
+      "targets": "src/app.bundle.js",
+      "allowed_fields": ["generated bundle"],
+      "protected_fields": ["source assets"],
+      "summary": "Build the standalone bundle with the new preset UI logic.",
+      "verify": ["npm run build succeeds."]
+    },
+    {
+      "id": "04_verify",
+      "order": 4,
+      "title": "Run focused regression checks",
+      "check": true,
+      "targets": "test/static-file.test.js and project tests",
+      "allowed_fields": ["preset UI assertions"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Verify the new hooks, removed controls, and existing engine behavior.",
+      "verify": ["npm test passes.", "Checklist completion count is consistent."]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "target_file": "FTO Image Generator web UI",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Move image controls to the left, reduce previews on the right, add browser-saved presets, and add click-to-apply rotation controls.",
+  "assumptions": [
+    "A preset stores sticker colors, notation, input mode, label visibility, and selected palette color in localStorage.",
+    "Clicking a rotation button appends that move to the notation and immediately refreshes both previews.",
+    "Clockwise, counterclockwise, and double-turn controls are provided for each supported face move."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_restructure_layout",
+      "order": 1,
+      "title": "Place controls on the left and smaller previews on the right",
+      "check": true,
+      "targets": "index.html, src/styles.css",
+      "allowed_fields": ["page structure", "layout styles", "responsive styles"],
+      "protected_fields": ["SVG rendering geometry", "download behavior"],
+      "summary": "Reorder the page and size preview panels for a control-first desktop layout.",
+      "verify": ["Controls precede previews in document order.", "Desktop and narrow layouts remain usable."]
+    },
+    {
+      "id": "02_add_rotation_controls",
+      "order": 2,
+      "title": "Add click-to-apply rotation symbols",
+      "check": true,
+      "targets": "index.html, src/app.js, src/styles.css",
+      "allowed_fields": ["rotation controls", "notation update behavior", "related styles"],
+      "protected_fields": ["rotation permutation logic"],
+      "summary": "Render supported move buttons and apply a clicked move immediately.",
+      "verify": ["All supported face moves expose clockwise, inverse, and double-turn buttons.", "A click updates notation and preview state."]
+    },
+    {
+      "id": "03_add_presets",
+      "order": 3,
+      "title": "Add local preset save, load, and delete",
+      "check": true,
+      "targets": "index.html, src/app.js, src/styles.css",
+      "allowed_fields": ["preset controls", "localStorage serialization", "preset application"],
+      "protected_fields": ["template assets", "move engine"],
+      "summary": "Store and restore the current image configuration in the browser.",
+      "verify": ["Preset data is validated before use.", "Save, load, and delete update the UI."]
+    },
+    {
+      "id": "04_build_bundle",
+      "order": 4,
+      "title": "Regenerate the standalone browser bundle",
+      "check": true,
+      "targets": "src/app.bundle.js",
+      "allowed_fields": ["generated bundle"],
+      "protected_fields": ["source assets"],
+      "summary": "Build the file-URL-compatible bundle from the edited source.",
+      "verify": ["npm run build succeeds.", "Bundle contains the new controls logic."]
+    },
+    {
+      "id": "05_verify",
+      "order": 5,
+      "title": "Run focused automated verification",
+      "check": true,
+      "targets": "project tests and static UI assertions",
+      "allowed_fields": ["tests directly related to the new UI behavior"],
+      "protected_fields": ["unrelated tests"],
+      "summary": "Validate parsing, bundle generation, and required UI hooks.",
+      "verify": ["npm test passes.", "Checklist JSON and completed count are consistent."]
+    }
+  ]
+}
